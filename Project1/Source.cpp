@@ -19,6 +19,7 @@ struct Birthday
 	int date;
 	int month;
 	int year;
+	bool isCorrect();
 };
 
 struct University
@@ -229,6 +230,67 @@ void massiv(Student* arr, int size)
 	}
 }
 
+bool Birthday::isCorrect()
+{
+	bool result = false;
+	switch (month)
+	{
+	case 1:
+	case 3:
+	case 5:
+	case 7:
+	case 8:
+	case 10:
+	case 12:
+	{
+		if ((date <= 31) && (date > 0))
+			result = true;
+		break;
+	}
+
+	case 4:
+	case 6:
+	case 9:
+	case 11:
+	{
+		if ((date <= 30) && (date > 0))
+			result = true;
+		break;
+	}
+
+	case 2:
+	{
+		if (year % 4 != 0)
+		{
+			if ((date <= 28) && (date > 0))
+				result = true;
+		}
+		else
+			if (year % 400 == 0)
+			{
+				if ((date <= 29) && (date > 0))
+					result = true;
+			}
+			else
+				if ((year % 100 == 0) && (year % 400 != 0))
+				{
+					if ((date == 28) && (date> 0))
+						result = true;
+				}
+				else
+					if ((year % 4 == 0) && (year % 100 != 0))
+						if ((date<= 29) && (date> 0))
+							result = true;
+		break;
+	}
+
+	default:
+		result = false;
+	}
+
+	return result;
+}
+
 int main()
 {
 	setlocale(LC_ALL, "RU");
@@ -236,9 +298,11 @@ int main()
 	Student* arr;
 	int size;
 
-	cout << "Введите количество человек, данные которых вы будете вводить: ";
-
-	cin >> size;
+	do
+	{
+		cout << "Введите количество человек, данные которых вы будете вводить: ";
+		cin >> size;
+	} while (size < 1);
 
 	arr = new Student[size];
 
@@ -279,28 +343,43 @@ int main()
 			} while (arr[i].height > 2.5);
 		} while (arr[i].height < 0.3);
 
-		cout << "Введите вес: ";
-		cin >> arr[i].weight;
-		cout << endl;
+		do
+		{
+			do
+			{
+				cout << "Введите вес: ";
+				cin >> arr[i].weight;
+				cout << endl;
+			} while (arr[i].weight < 0);
+		} while (arr[i].weight > 150);
 
 		cout << "Введите номер телефона: ";
 		cin >> arr[i].phone_number;
 		cout << endl;
 
-		cout << "Введите День Рождения: ";
-		cin >> arr[i].DATE.date;
-		cout << endl;
-		cout << "Месяц: ";
-		cin >> arr[i].DATE.month;
-		cout << endl;
-		cout << "Год: ";
-		cin >> arr[i].DATE.year;
-		cout << endl;
+		do
+		{
+			cout << "Введите День Рождения: ";
+			cin >> arr[i].DATE.date;
+			cout << endl;
+			cout << "Месяц: ";
+			cin >> arr[i].DATE.month;
+			cout << endl;
+			cout << "Год: ";
+			cin >> arr[i].DATE.year;
+			cout << endl;
+		} while (!arr[i].DATE.isCorrect());
 
-		cout << "Введите почтовый индекс: ";
-		cin.ignore(cin.rdbuf()->in_avail());
-		cin >> arr[i].COPY.index;
-		cout << endl;
+		do
+		{
+			do
+			{
+				cout << "Введите почтовый индекс: ";
+				cin.ignore(cin.rdbuf()->in_avail());
+				cin >> arr[i].COPY.index;
+				cout << endl;
+			} while (arr[i].COPY.index >= 100000);
+		} while (arr[i].COPY.index < 10000);
 
 		cout << "Введите страну: ";
 		cin.ignore(cin.rdbuf()->in_avail());
@@ -330,18 +409,30 @@ int main()
 		cin >> arr[i].COPY.apartment;
 		cout << endl;
 
-		cout << "Введите номер курса в университете: ";
-		cin >> arr[i].COURSE.course;
-		cout << endl;
+		do
+		{
+			do
+			{
+				cout << "Введите номер курса в университете: ";
+				cin >> arr[i].COURSE.course;
+				cout << endl;
+			} while (arr[i].COURSE.course > 6);
+		} while (arr[i].COURSE.course < 1);
 
 		cout << "Введите название группы: ";
 		cin.ignore(cin.rdbuf()->in_avail());
 		cin.getline(arr[i].COURSE.group, 16);
 		cout << endl;
 
-		cout << "Введите среднюю оценку: ";
-		cin >> arr[i].COURSE.point;
-		cout << endl;
+		do
+		{
+			do
+			{
+				cout << "Введите среднюю оценку: ";
+				cin >> arr[i].COURSE.point;
+				cout << endl;
+			} while (arr[i].COURSE.point > 100);
+		} while (arr[i].COURSE.point < 0);
 
 		cout << "Введите специальность: ";
 		cin.ignore(cin.rdbuf()->in_avail());
@@ -365,7 +456,7 @@ int main()
 
 	}
 	
-	if (size > 0)
+	if (size > 1)
 	{
 		//функция сортировки массива;
 		sort(arr, size);
@@ -376,7 +467,7 @@ int main()
 
 	else
 	{
-		cout << "Так как вы ввели информацию только об 1 человеке функции сортировки и поиска недоступны" << endl;
+		cout << "Так как вы ввели информацию только об 1 человеке функции сортировки и поиска недоступны" << endl << endl;
 	}
 
 	cout << "Вывод информации о введенных людях: " << endl;
